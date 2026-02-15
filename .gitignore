@@ -1,0 +1,20 @@
+  # Secrets & credentials
+  .env
+  .env.*
+  *.pem
+  *.key
+  id_rsa*
+  *.credential
+
+  # OS junk
+  .DS_Store
+  Thumbs.db
+
+  # Shell history/state
+  .zsh_history
+  .bash_history
+  .zcompdump*
+
+  # Editor local state
+  *.swp
+  *.swo
