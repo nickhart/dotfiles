@@ -1,0 +1,113 @@
+# ============================================================================
+# Gitleaks Configuration for Dotfiles Repository
+# ============================================================================
+# This configuration scans for secrets, API keys, and credentials.
+# It uses gitleaks' built-in rules plus custom rules for dotfiles.
+#
+# Usage:
+#   gitleaks detect --verbose
+#   gitleaks protect --staged  (for pre-commit hook)
+# ============================================================================
+
+title = "Dotfiles Gitleaks Configuration"
+
+# Use all default gitleaks rules
+[extend]
+useDefault = true
+
+# Additional custom rules specific to dotfiles
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key pattern"
+regex = '''(?i)(api[_-]?key|apikey|api[_-]?token)\s*[=:]\s*['"]?[a-zA-Z0-9_\-]{20,}['"]?'''
+tags = ["api", "key"]
+
+[[rules]]
+id = "export-secret"
+description = "Shell export statement with potential secret"
+regex = '''(?i)export\s+(.*?(secret|password|token|key|credential).*?=.+)'''
+tags = ["shell", "secret"]
+
+[[rules]]
+id = "aws-access-key-value"
+description = "AWS Access Key ID in assignment"
+regex = '''(?i)(aws_access_key_id|AWS_ACCESS_KEY_ID)\s*[=:]\s*['"]?((?!dummy)[A-Z0-9]{20})['"]?'''
+tags = ["aws", "key"]
+
+[[rules]]
+id = "aws-secret-key-value"
+description = "AWS Secret Access Key in assignment"
+regex = '''(?i)(aws_secret_access_key|AWS_SECRET_ACCESS_KEY)\s*[=:]\s*['"]?(?!dummy)([A-Za-z0-9/+=]{40})['"]?'''
+tags = ["aws", "secret"]
+
+[[rules]]
+id = "github-token"
+description = "GitHub Personal Access Token"
+regex = '''ghp_[a-zA-Z0-9]{36}'''
+tags = ["github", "token"]
+
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[a-zA-Z0-9]{48}'''
+tags = ["openai", "api-key"]
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API Key"
+regex = '''sk-ant-[a-zA-Z0-9\-]{95,}'''
+tags = ["anthropic", "api-key"]
+
+[[rules]]
+id = "slack-token"
+description = "Slack Token"
+regex = '''xox[baprs]-[0-9]{10,13}-[0-9]{10,13}-[a-zA-Z0-9]{24,}'''
+tags = ["slack", "token"]
+
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN (RSA|DSA|EC|OPENSSH|PGP) PRIVATE KEY-----'''
+tags = ["private-key"]
+
+[[rules]]
+id = "jwt-token"
+description = "JSON Web Token"
+regex = '''eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*'''
+tags = ["jwt", "token"]
+
+# Allowlist for safe patterns and example values
+[allowlist]
+description = "Allowlist for safe patterns"
+regexes = [
+    # Placeholder values
+    '''YOUR_NAME|YOUR_EMAIL|YOUR_.*|your_.*_here''',
+    # Example/dummy values
+    '''example\.com|dummy|test|sample|placeholder''',
+    '''xxx|yyy|zzz|abc123|changeme''',
+    # Git commands in comments/docs
+    '''git config --global''',
+    # Safe AWS dummy values (used in examples)
+    '''AWS_ACCESS_KEY_ID=dummy''',
+    '''AWS_SECRET_ACCESS_KEY=dummy''',
+]
+
+paths = [
+    # Ignore example files
+    '''\.example$''',
+    '''.+\.sample$''',
+    # Ignore documentation
+    '''README\.md''',
+    # Ignore this config file itself
+    '''\.gitleaks\.toml''',
+]
+
+# Stop words that indicate a false positive
+stopwords = [
+    "example",
+    "sample",
+    "test",
+    "dummy",
+    "placeholder",
+    "changeme",
+]

@@ -1,0 +1,40 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[user]
+	# The install.sh script will prompt for your name and email
+	# Or manually edit these after installation
+	name = YOUR_NAME
+	email = YOUR_EMAIL
+
+[init]
+	defaultBranch = main
+
+[alias]
+	# Shortcuts
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+
+	# Undo/reset helpers
+	unstage = reset HEAD --
+	undo = reset --soft HEAD~1
+	amend = commit --amend --no-edit
+
+	# Viewing
+	last = log -1 HEAD
+	lg = log --oneline --graph --decorate --all
+	visual = !gitk
+
+	# Branch management
+	push-current = push origin $(git branch --show-current)
+	gone = !git remote prune origin
+
+	# Main/master branch helpers
+	syncmain = !git switch main && git pull
+	upmain = !git checkout main && git pull origin main
+	gomain = !git fetch origin main:main && git checkout main

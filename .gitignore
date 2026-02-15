@@ -1,20 +1,70 @@
-  # Secrets & credentials
-  .env
-  .env.*
-  *.pem
-  *.key
-  id_rsa*
-  *.credential
+# ============================================================================
+# WARNING: This gitignore protects against committing secrets
+# NEVER commit API keys, tokens, passwords, or private keys!
+# ============================================================================
 
-  # OS junk
-  .DS_Store
-  Thumbs.db
+# Local override files (for secrets and machine-specific config)
+*.local
+.zshrc.local
+.zprofile.local
+.bashrc.local
+.bash_profile.local
 
-  # Shell history/state
-  .zsh_history
-  .bash_history
-  .zcompdump*
+# Environment files & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.credential
+*.credentials
+*secret*
+*password*
+*token*
 
-  # Editor local state
-  *.swp
-  *.swo
+# SSH & GPG
+.ssh/
+*.pub
+*.gpg
+*.asc
+
+# Cloud provider credentials
+.aws/
+.azure/
+.gcloud/
+credentials.json
+service-account*.json
+
+# API tokens & config files that may contain secrets
+.npmrc
+.yarnrc
+.pypirc
+.netrc
+.config/gh/hosts.yml
+
+# OS junk
+.DS_Store
+Thumbs.db
+._*
+
+# Shell history/state
+.zsh_history
+.bash_history
+.zcompdump*
+.lesshst
+.wget-hsts
+
+# Editor local state
+*.swp
+*.swo
+*~
+.viminfo
+
+# Backup files
+*.backup
+*.bak
+.dotfiles-backup-*/

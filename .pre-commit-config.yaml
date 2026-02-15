@@ -1,0 +1,49 @@
+# ============================================================================
+# Pre-commit Hook Configuration
+# ============================================================================
+# This configuration runs gitleaks before every commit to detect secrets.
+#
+# Installation:
+#   brew install pre-commit gitleaks  # macOS
+#   pip install pre-commit            # Linux/Container
+#   pre-commit install                # Install the hook
+#
+# Usage:
+#   git commit                        # Runs automatically
+#   pre-commit run --all-files        # Manual run on all files
+#   SKIP=gitleaks git commit          # Skip hook (emergency only!)
+# ============================================================================
+
+repos:
+  # Gitleaks - Secret scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+        name: Detect secrets with gitleaks
+        entry: gitleaks protect --verbose --redact --staged
+        language: system
+        pass_filenames: false
+
+  # Built-in pre-commit hooks for basic checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-json
+        name: Check JSON syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+      - id: detect-private-key
+        name: Detect private keys
+      - id: mixed-line-ending
+        name: Check for mixed line endings
+
+# Global configuration
+fail_fast: false  # Run all hooks even if one fails
