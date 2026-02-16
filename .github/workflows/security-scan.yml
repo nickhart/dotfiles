@@ -57,6 +57,13 @@ jobs:
       - name: Install pre-commit
         run: pip install pre-commit
 
+      - name: Install gitleaks
+        run: |
+          wget https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz
+          tar -xzf gitleaks_8.24.3_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+          gitleaks version
+
       - name: Run pre-commit hooks
         run: pre-commit run --all-files
 

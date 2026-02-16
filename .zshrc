@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # ============================================================================
 # WARNING: DO NOT STORE SECRETS IN THIS FILE
 # This is a PUBLIC dotfiles repository. Never commit:
@@ -38,7 +39,8 @@ fi
 # Homebrew Ruby (if installed)
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
   export PATH=/opt/homebrew/opt/ruby/bin:$PATH
-  export PATH=`gem environment gemdir`/bin:$PATH
+  GEM_DIR=$(gem environment gemdir)
+  export PATH="$GEM_DIR/bin:$PATH"
 fi
 
 # ============================================================================
@@ -85,4 +87,5 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 #   export AWS_SECRET_ACCESS_KEY=your_secret_here
 #
 # This file is gitignored and should never be committed.
+# shellcheck disable=SC1090
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local

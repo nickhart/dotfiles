@@ -24,21 +24,13 @@ tags = ["api", "key"]
 
 [[rules]]
 id = "export-secret"
-description = "Shell export statement with potential secret"
-regex = '''(?i)export\s+(.*?(secret|password|token|key|credential).*?=.+)'''
+description = "Shell export statement with potential secret (not in comments)"
+regex = '''(?i)^[^#]*export\s+(.*?(secret|password|token|key|credential).*?=.+)'''
 tags = ["shell", "secret"]
 
-[[rules]]
-id = "aws-access-key-value"
-description = "AWS Access Key ID in assignment"
-regex = '''(?i)(aws_access_key_id|AWS_ACCESS_KEY_ID)\s*[=:]\s*['"]?((?!dummy)[A-Z0-9]{20})['"]?'''
-tags = ["aws", "key"]
-
-[[rules]]
-id = "aws-secret-key-value"
-description = "AWS Secret Access Key in assignment"
-regex = '''(?i)(aws_secret_access_key|AWS_SECRET_ACCESS_KEY)\s*[=:]\s*['"]?(?!dummy)([A-Za-z0-9/+=]{40})['"]?'''
-tags = ["aws", "secret"]
+# Note: Removed custom AWS rules that used negative lookahead (?!)
+# which is not supported by RE2. The default gitleaks rules already
+# detect AWS credentials effectively.
 
 [[rules]]
 id = "github-token"
@@ -82,9 +74,15 @@ description = "Allowlist for safe patterns"
 regexes = [
     # Placeholder values
     '''YOUR_NAME|YOUR_EMAIL|YOUR_.*|your_.*_here''',
-    # Example/dummy values
+    # Example/dummy values in comments
+    '''#.*export.*API.*=''',
+    '''#.*export.*TOKEN.*=''',
+    '''#.*export.*KEY.*=''',
+    '''#.*export.*SECRET.*=''',
+    '''echo ".*export.*=''',
     '''example\.com|dummy|test|sample|placeholder''',
     '''xxx|yyy|zzz|abc123|changeme''',
+    '''sk-\.\.\.|re_\.\.\.|ghp_\.\.\.|AKIA\.\.\.''',
     # Git commands in comments/docs
     '''git config --global''',
     # Safe AWS dummy values (used in examples)

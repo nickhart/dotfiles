@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # ============================================================================
 # WARNING: DO NOT STORE SECRETS IN THIS FILE
 # This is a PUBLIC dotfiles repository.
@@ -17,4 +18,5 @@ fi
 #   export OTHER_SECRET=your_secret_here
 #
 # This file is gitignored and should never be committed.
+# shellcheck disable=SC1090
 [ -f ~/.zprofile.local ] && source ~/.zprofile.local
